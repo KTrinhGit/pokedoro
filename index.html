@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédoro Timer</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="profile">
+                <img src="https://api.dicebear.com/7.x/pixel-art/svg?seed=pokemon" alt="Profile" class="avatar">
+            </div>
+            <div class="nav-items">
+                <button class="nav-item active">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" />
+                    </svg>
+                </button>
+                <button class="nav-item">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M22,21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="timer-section">
+                <h2>Pokedoro</h2>
+                <div class="timer-circle">
+                    <div class="timer-display">
+                        <span id="minutes">25</span>:<span id="seconds">00</span>
+                    </div>
+                    <button id="start-btn" class="start-btn">START</button>
+                </div>
+                <div class="timer-controls">
+                    <button id="pause-btn" disabled>Pause</button>
+                    <button id="reset-btn">Reset</button>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <span class="stat-value" id="session-count">0</span>
+                        <span class="stat-label">Pomodoros</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div id="pokemon-reward" class="pokemon-reward hidden">
+            <h2>You caught a new Pokémon!</h2>
+            <div class="pokemon-display">
+                <img id="pokemon-sprite" src="" alt="Pokemon sprite">
+                <p id="pokemon-name"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/pokemon.js"></script>
+    <script src="scripts/timer.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+
+</html>
