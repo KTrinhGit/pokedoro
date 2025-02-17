@@ -7,6 +7,13 @@ class PomodoroTimer {
         this.isWorkSession = true;
         this.onComplete = onComplete;
         this.timer = null;
+        this.originalTitle = document.title;
+    }
+
+    formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
 
     start() {
@@ -20,6 +27,7 @@ class PomodoroTimer {
         if (this.isRunning) {
             this.isRunning = false;
             clearInterval(this.timer);
+            document.title = this.originalTitle; // Reset title when paused
         }
     }
 
@@ -28,6 +36,7 @@ class PomodoroTimer {
         this.timeRemaining = this.workDuration;
         this.isWorkSession = true;
         this.updateDisplay();
+        document.title = this.originalTitle; // Reset title when reset
     }
 
     tick() {
@@ -54,5 +63,10 @@ class PomodoroTimer {
 
         document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
         document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+        // Update tab title
+        const timeString = this.formatTime(this.timeRemaining);
+        const sessionType = this.isWorkSession ? 'Work' : 'Break';
+        document.title = `(${timeString}) ${sessionType} - Pokédoro`;
     }
 } 
