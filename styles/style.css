@@ -82,9 +82,15 @@ body {
 }
 
 .timer-section h2 {
+    font-family: 'Press Start 2P', cursive;
     font-size: 1.5rem;
     margin-bottom: 2rem;
     color: var(--text-color);
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0.5rem 0;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
 }
 
 .timer-circle {
@@ -267,11 +273,23 @@ body {
 .collection-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     margin-bottom: 2rem;
+    gap: 2rem;
+}
+
+.collection-header h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0.5rem 0;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
 }
 
 .collection-stats {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
+    padding-bottom: 0.5rem;
 }
