@@ -212,3 +212,62 @@ body {
 .hidden {
     display: none;
 }
+
+/* Add these styles */
+.collection-section {
+    display: none;
+    flex: 1;
+    padding: 2rem;
+    width: 100%;
+}
+
+.collection-section.active {
+    display: block !important;
+}
+
+.timer-section.hidden {
+    display: none !important;
+}
+
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.pokemon-entry {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.pokemon-entry.uncaught {
+    opacity: 0.5;
+    filter: grayscale(1);
+}
+
+.pokemon-entry img {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 0.5rem;
+}
+
+.pokemon-entry p {
+    font-size: 0.875rem;
+    color: var(--text-color);
+}
+
+.collection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.collection-stats {
+    font-size: 0.875rem;
+    color: #6B7280;
+}

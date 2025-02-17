@@ -50,4 +50,41 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('pause-btn').disabled = true;
         document.getElementById('pokemon-reward').classList.add('hidden');
     });
+
+    // Navigation handling
+    const timerSection = document.querySelector('.timer-section');
+    const collectionSection = document.createElement('div');
+    collectionSection.className = 'collection-section';
+    document.querySelector('.main-content').appendChild(collectionSection);
+
+    // Home button (first nav button)
+    const homeButton = document.querySelector('.nav-item:first-child');
+    homeButton.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+        homeButton.classList.add('active');
+
+        timerSection.classList.remove('hidden');
+        collectionSection.classList.remove('active');
+    });
+
+    // Collection button
+    const collectionButton = document.getElementById('collection-nav');
+    collectionButton.addEventListener('click', async () => {
+        console.log('Collection button clicked'); // Debug log
+
+        // Update active states
+        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+        collectionButton.classList.add('active');
+
+        // Hide timer, show collection
+        timerSection.classList.add('hidden');
+        collectionSection.classList.add('active');
+
+        // Display the collection
+        try {
+            await pokemonManager.displayFullCollection(collectionSection);
+        } catch (error) {
+            console.error('Error displaying collection:', error);
+        }
+    });
 }); 
