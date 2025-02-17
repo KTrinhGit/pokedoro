@@ -8,6 +8,10 @@ class PomodoroTimer {
         this.onComplete = onComplete;
         this.timer = null;
         this.originalTitle = document.title;
+        this.lastTick = null;
+
+        // Initialize audio context
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
 
     formatTime(seconds) {
@@ -16,10 +20,30 @@ class PomodoroTimer {
         return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
 
+    playStartSound() {
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
+
+        gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
+
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + 0.2);
+    }
+
     start() {
         if (!this.isRunning) {
+            this.playStartSound();
             this.isRunning = true;
-            this.timer = setInterval(() => this.tick(), 1000);
+            this.lastTick = Date.now();
+            this.tick(); // Initial tick
+            this.timer = setInterval(() => this.tick(), 1000); // Back to 1-second intervals
         }
     }
 
@@ -27,6 +51,8 @@ class PomodoroTimer {
         if (this.isRunning) {
             this.isRunning = false;
             clearInterval(this.timer);
+            this.timer = null;
+            this.lastTick = null;
             document.title = this.originalTitle; // Reset title when paused
         }
     }
@@ -40,20 +66,28 @@ class PomodoroTimer {
     }
 
     tick() {
-        this.timeRemaining--;
-        this.updateDisplay();
+        if (!this.isRunning) return;
 
-        if (this.timeRemaining <= 0) {
-            this.pause();
-            if (this.isWorkSession) {
-                this.onComplete();
-                this.timeRemaining = this.breakDuration;
-                this.isWorkSession = false;
-            } else {
-                this.timeRemaining = this.workDuration;
-                this.isWorkSession = true;
-            }
+        const now = Date.now();
+        const delta = now - this.lastTick;
+
+        if (delta >= 1000) {
+            this.timeRemaining--;
+            this.lastTick = now;
             this.updateDisplay();
+
+            if (this.timeRemaining <= 0) {
+                this.pause();
+                if (this.isWorkSession) {
+                    this.onComplete();
+                    this.timeRemaining = this.breakDuration;
+                    this.isWorkSession = false;
+                } else {
+                    this.timeRemaining = this.workDuration;
+                    this.isWorkSession = true;
+                }
+                this.updateDisplay();
+            }
         }
     }
 
