@@ -9,6 +9,9 @@ class PomodoroTimer {
         this.timer = null;
         this.originalTitle = document.title;
         this.lastTick = null;
+        this.mode = 'pomodoro';
+        this.stopwatchTime = 0;
+        this.startTime = null;
 
         // Initialize audio context
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -42,53 +45,71 @@ class PomodoroTimer {
             this.playStartSound();
             this.isRunning = true;
             this.lastTick = Date.now();
+            if (this.mode === 'stopwatch') {
+                this.startTime = Date.now() - (this.stopwatchTime * 1000); // Account for paused time
+            }
             this.tick(); // Initial tick
-            this.timer = setInterval(() => this.tick(), 1000); // Back to 1-second intervals
+            this.timer = setInterval(() => this.tick(), 100); // More frequent updates for smoother display
         }
     }
 
     pause() {
         if (this.isRunning) {
             this.isRunning = false;
+            if (this.mode === 'stopwatch') {
+                this.stopwatchTime = Math.floor((Date.now() - this.startTime) / 1000);
+            }
             clearInterval(this.timer);
             this.timer = null;
             this.lastTick = null;
-            document.title = this.originalTitle; // Reset title when paused
+            this.startTime = null;
+            document.title = this.originalTitle;
         }
     }
 
     reset() {
         this.pause();
-        this.timeRemaining = this.workDuration;
-        this.isWorkSession = true;
+        if (this.mode === 'pomodoro') {
+            this.timeRemaining = this.workDuration;
+            this.isWorkSession = true;
+        } else {
+            this.stopwatchTime = 0;
+            this.timeRemaining = 0;
+        }
         this.updateDisplay();
-        document.title = this.originalTitle; // Reset title when reset
+        document.title = this.originalTitle;
     }
 
     tick() {
         if (!this.isRunning) return;
 
         const now = Date.now();
-        const delta = now - this.lastTick;
 
-        if (delta >= 1000) {
-            this.timeRemaining--;
-            this.lastTick = now;
-            this.updateDisplay();
-
-            if (this.timeRemaining <= 0) {
-                this.pause();
-                if (this.isWorkSession) {
-                    this.onComplete();
-                    this.timeRemaining = this.breakDuration;
-                    this.isWorkSession = false;
-                } else {
-                    this.timeRemaining = this.workDuration;
-                    this.isWorkSession = true;
+        if (this.mode === 'pomodoro') {
+            const delta = now - this.lastTick;
+            if (delta >= 1000) {
+                this.timeRemaining--;
+                if (this.timeRemaining <= 0) {
+                    this.pause();
+                    if (this.isWorkSession) {
+                        this.onComplete();
+                        this.timeRemaining = this.breakDuration;
+                        this.isWorkSession = false;
+                    } else {
+                        this.timeRemaining = this.workDuration;
+                        this.isWorkSession = true;
+                    }
                 }
-                this.updateDisplay();
+                this.lastTick = now;
             }
+        } else {
+            // Stopwatch mode - calculate exact elapsed time
+            const elapsedSeconds = Math.floor((now - this.startTime) / 1000);
+            this.timeRemaining = elapsedSeconds;
+            this.stopwatchTime = elapsedSeconds;
         }
+
+        this.updateDisplay();
     }
 
     updateDisplay() {
@@ -100,7 +121,21 @@ class PomodoroTimer {
 
         // Update tab title
         const timeString = this.formatTime(this.timeRemaining);
-        const sessionType = this.isWorkSession ? 'Work' : 'Break';
-        document.title = `(${timeString}) ${sessionType} - Pokédoro`;
+        const modeString = this.mode === 'pomodoro'
+            ? (this.isWorkSession ? 'Work' : 'Break')
+            : 'Stopwatch';
+        document.title = `(${timeString}) ${modeString} - Pokédoro`;
+    }
+
+    setMode(mode) {
+        this.mode = mode;
+        this.pause();
+        if (mode === 'pomodoro') {
+            this.timeRemaining = this.workDuration;
+        } else {
+            this.stopwatchTime = 0;
+            this.timeRemaining = 0;
+        }
+        this.updateDisplay();
     }
 } 

@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
 </head>
 
 <body>
@@ -35,6 +38,10 @@
         <main class="main-content">
             <div class="timer-section">
                 <h2>Pokedoro</h2>
+                <div class="mode-switch">
+                    <button class="mode-btn active" data-mode="pomodoro">Pomodoro</button>
+                    <button class="mode-btn" data-mode="stopwatch">Stopwatch</button>
+                </div>
                 <div class="timer-circle">
                     <div class="timer-display">
                         <span id="minutes">25</span>:<span id="seconds">00</span>

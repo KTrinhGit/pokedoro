@@ -51,6 +51,27 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('pokemon-reward').classList.add('hidden');
     });
 
+    // Add mode switching functionality
+    const modeBtns = document.querySelectorAll('.mode-btn');
+    modeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update button states
+            modeBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Switch timer mode
+            const mode = btn.dataset.mode;
+            timer.setMode(mode);
+
+            // Update UI elements
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('pause-btn').disabled = true;
+
+            // Hide pokemon reward if switching modes
+            document.getElementById('pokemon-reward').classList.add('hidden');
+        });
+    });
+
     // Navigation handling
     const timerSection = document.querySelector('.timer-section');
     const collectionSection = document.createElement('div');
